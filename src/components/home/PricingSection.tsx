@@ -281,22 +281,6 @@ const PricingSection: React.FC = () => {
               </table>
             </div>
           </div>
-
-          {/* Upgrade Notice */}
-          <div className="glass p-6 rounded-xl max-w-3xl mx-auto border border-white/20">
-            <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-secondary to-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
-                <Target className="w-5 h-5 text-dark" />
-              </div>
-              <div>
-                <h4 className="font-bold text-dark mb-2">💡 Pro Tip: Upgrade anytime!</h4>
-                <p className="text-gray-700 text-sm">
-                  Started with Sneak Peek but need more firepower? Upgrade to Sweet Spot anytime 
-                  from your dashboard and only pay the difference ($10). Your hunt data carries over seamlessly!
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 

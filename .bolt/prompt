@@ -1,0 +1,386 @@
+PRD v2.4 – ICP Hunter (UI/Frontend Focus)
+
+**Last updated:** June 2025
+
+**Goal:** MVP launch with clear UX separation between pricing tiers
+
+**Status:** "Go Big" removed from MVP scope, focus on Sneak Peek & Sweet Spot
+
+---
+
+## ✅ UX Decision Summary
+
+### 🧠 Key UX Logic
+
+- Only **Sweet Spot** hunts appear in the Trophy Room.
+- **Sneak Peek** hunts are **CSV-only** and remain **separate** from the main dashboard.
+- To avoid UX confusion, introduce a **"Quick Hunts"** section in the dashboard for CSV-based Sneak Peeks.
+- Sneak Peek users can upgrade individual hunts to gain dashboard access.
+
+---
+
+## 1. Product Overview
+
+**ICP Hunter** is a self-service SaaS tool to help users identify their Ideal Customer Profiles (ICPs) on Twitter/X.
+
+**Pay-per-use** with no subscriptions or long-term commitment.
+
+**Positioning:**
+
+🎯 "Let’s hunt your perfect customers, one analysis at a time – no subscriptions, just results."
+
+**Brand personality:**
+
+Playful but professional – Looney Tunes-inspired meets startup energy.
+
+Aligned with @theunderdoglabs on Twitter.
+
+**Language & metaphor:**
+
+Use hunting metaphors throughout: “hunt,” “target,” “trophy,” “bag ‘em,” “gear up,” etc.
+
+---
+
+## 2. UI / Frontend Responsibilities
+
+### 🎨 Frontend (owned by Bolt.new)
+
+- Landing page (conversion optimized)
+- Tier selection UI
+- Stripe Checkout
+- Processing animations
+- Results UI (for Sweet Spot)
+- Trophy Room dashboard
+- “Quick Hunts” section (for Sneak Peeks)
+- Responsive design
+- On-brand components & micro-interactions
+
+### ⚙ Backend (owned by Dev)
+
+- Twitter scraping via Apify
+- Filtering logic + scoring
+- Stripe Webhooks & Supabase DB
+- Trophy saving logic
+- Email infrastructure (confirmation, export, welcome)
+- API endpoints for all interactions
+
+---
+
+## 3. User Flows (UI Perspective)
+
+### 🔥 First-time users
+
+```
+Landing Page → Tier selection → Stripe Checkout → Processing screen
+→ Sneak Peek → CSV-only download (no login)
+→ Sweet Spot → Interactive UI → Login prompt → Trophy Room access
+
+```
+
+### 💎 Returning users
+
+```
+Login → Dashboard → Trophy Room → New Hunt → Tier Selection → Payment
+→ Result based on selected Tier (CSV or UI)
+
+```
+
+---
+
+## 🔐 3.1 Authentication & Account Logic
+
+### Why require login?
+
+- To persist data (saved profiles, trophies, history)
+- To manage multiple hunts and tiers under one user
+- To allow upgrades and re-downloads
+- For Stripe payment linking and error handling
+
+### Login requirements by feature:
+
+| Feature | Login required? |
+| --- | --- |
+| First Sneak Peek | ❌ |
+| First Sweet Spot | ⚠️ Before Trophy Room |
+| Trophy Room & Dashboard | ✅ |
+| Upgrade a previous hunt | ✅ |
+| Re-download CSVs | ✅ |
+
+### Suggested login timing:
+
+- Do not require login before purchase
+- For Sweet Spot: prompt login **after results screen**, just before saving profiles
+- For Dashboard access: always require login
+
+---
+
+## 4. Design System & Branding
+
+### 🎨 Color Palette
+
+```css
+--primary-orange: #F28C38;
+--secondary-yellow: #FFC107;
+--accent-salmon: #FF6B6B;
+--success-green: #4CAF50;
+--text-dark: #333333;
+--background-light: #F8F9FA;
+
+```
+
+### 📝 Typography
+
+- Headlines: bold, rounded, playful
+- Body text: clean sans-serif
+- CTAs: action-oriented, large
+
+### 🔘 UI Guidelines
+
+- Border radius: 12–16px
+- Shadows: subtle soft depth
+- Hover effects: bouncy
+- Icons: cartoon-style (🎯 🏆 🔍 🦌)
+
+---
+
+## 5. Pricing Tiers – MVP Scope
+
+### 🔍 Sneak Peek ($9)
+
+| Feature | Status |
+| --- | --- |
+| 5K followers | ✅ |
+| Basic filters | ✅ |
+| CSV export only | ✅ |
+| Dashboard access | ❌ |
+| Trophy Room | ❌ |
+
+Delivered via a simple modal with "Download Your Loot" + upgrade CTA.
+
+---
+
+### 🎯 Sweet Spot ($19)
+
+| Feature | Status |
+| --- | --- |
+| 25K followers | ✅ |
+| Advanced filters | ✅ |
+| Dashboard access | ✅ |
+| Trophy Room | ✅ |
+| CSV Export | ✅ |
+| Profile saving | ✅ ("Bag ‘Em!") |
+
+---
+
+## 6. UI Components Specification
+
+### 🏠 Landing Page Sections
+
+1. **Hero Section**
+    - Headline + Subheadline
+    - Hunt demo (e.g. "Hunt @elonmusk")
+    - Primary CTA
+2. **How It Works (3-Step Visual)**
+    - Step 1: "Enter Target"
+    - Step 2: "We Hunt"
+    - Step 3: "You Choose"
+3. **Pricing Section**
+    - Two visible tier cards (Sneak Peek, Sweet Spot)
+    - Feature comparison table
+    - “Most Popular” badge on Sweet Spot
+4. **Social Proof**
+    - Testimonials
+    - Hunt examples (e.g. "We found 47 perfect customers for @xyzstudio")
+
+---
+
+### 🎯 Results Interface (Sweet Spot only)
+
+```
+
+┌─ Hunt Results: @elonmusk (847 profiles found) ─┐
+│ [Select All High Scores] [Add to Trophy Room] │
+├───────────────────────────────────────────────┤
+│ ☑️ @profile1 | John Doe | 🧙‍♂️ | 50K | Score: 8/10 | [Bag 'Em!] │
+│ ☐  @profile2 | Jane Dev | 📈  | 12K | Score: 7/10 | [Bag 'Em!] │
+│ ☑️ @profile3 | Mike CEO | 💰 | 85K | Score: 9/10 | [Bag 'Em!] │
+└───────────────────────────────────────────────┘
+
+```
+
+---
+
+### 🏆 Trophy Room Dashboard (Sweet Spot only)
+
+```
+
+┌─ Your Trophy Room (23 trophies) ─┐
+│ 📊 Categories: 🧙‍♂️(8) 📈(7) 🎨(4) 💰(4) │
+├──────────────────────────────────┤
+│ Recent Hunts:                    │
+│ • @elonmusk → 12 bagged          │
+│ • @naval    → 8 bagged           │
+│ • @pmarca   → 3 bagged           │
+├──────────────────────────────────┤
+│ [New Hunt] [Export All]          │
+└──────────────────────────────────┘
+
+```
+
+---
+
+### 🔍 Quick Hunts Section (for Sneak Peek)
+
+```
+
+<h2>Quick Hunts (CSV-only)</h2>
+<ul>
+  <li>@pmarca – [Download CSV]</li>
+  <li>@paulg – [Download CSV]</li>
+</ul>
+
+```
+
+Appears in dashboard below the Trophy Room. No filters or interactivity.
+
+---
+
+## 7. Loading States & Animations
+
+### ⏳ Processing Stages
+
+1. Payment confirmed → “Gear up successful! 🎯”
+2. Hunt starting → “Preparing hunting gear...”
+3. Scraping → “Hunting through followers...”
+4. Filtering → “Analyzing potential targets...”
+5. Scoring → “Calculating hunt scores...”
+6. Done → “Trophy collection ready! 🏆”
+
+### 🎬 Micro-animations
+
+- Button hover → bouncy scale
+- Checkbox → satisfying tick
+- Progress bar → smooth stepwise animation
+- Trophy save → bounce effect
+
+---
+
+## 8. Responsive Breakpoints
+
+### 📱 Mobile-First Strategy
+
+- Mobile: 320–768px
+- Tablet: 768–1024px
+- Desktop: 1024px+
+
+### Mobile Optimizations
+
+- Single-column tier cards
+- Horizontal swipe on results
+- Touch-friendly buttons (min 44px)
+- Sticky CTA buttons
+
+---
+
+## 9. Frontend Data Requirements
+
+### 📊 Hunt Results API
+
+```json
+
+{
+  "hunt_id": "hunt_123",
+  "target_account": "@elonmusk",
+  "total_followers_scraped": 25000,
+  "profiles_found": 847,
+  "tier": "sweet_spot",
+  "profiles": [...],
+  "processing_time": "4:32 minutes"
+}
+
+```
+
+---
+
+### 🏆 Trophy Room API
+
+```json
+
+{
+  "user_id": "user_123",
+  "total_trophies": 23,
+  "categories": {
+    "Code Wizard": 8,
+    "Growth Guru": 7,
+    "Pixel Perfectionist": 4,
+    "Money Mastermind": 4
+  },
+  "recent_hunts": [...],
+  "saved_profiles": [...]
+}
+
+```
+
+---
+
+## 10. Backend Integration
+
+### 🔌 API Endpoints
+
+| Endpoint | Method | Purpose | Used in |
+| --- | --- | --- | --- |
+| `/api/hunt/start` | POST | Start new hunt | After Stripe payment |
+| `/api/hunt/status/{id}` | GET | Poll processing state | Loading screen |
+| `/api/hunt/results/{id}` | GET | Load results | Modal or dashboard |
+| `/api/trophy/save` | POST | Save selected profiles | Trophy Room |
+| `/api/trophy/room` | GET | Load saved trophies | Dashboard |
+| `/api/user/stats` | GET | Load user stats | (Optional analytics) |
+
+---
+
+### 📧 Email Triggers
+
+- Payment confirmation
+- Hunt completion
+- CSV delivery (Sneak Peek)
+- Welcome email (after first profile saved)
+
+---
+
+## 11. Error States & Edge Cases
+
+### ❌ UI Error Handling
+
+- **Payment Failed:** "Hunt gear malfunction! Try again."
+- **Processing Timeout:** "Hunt taking longer than expected..."
+- **No Results Found:** "No trophies found. Try a different target?"
+- **API Errors / 500s:** "Our hunting equipment needs maintenance..."
+
+### 🔄 Loading States
+
+- Skeleton loaders in all key areas
+- Progressive disclosure of content (e.g., load hunt metadata first, then results)
+- Visual progress indicators for all processing stages
+
+---
+
+## 12. Handoff Documentation for Dev
+
+What Dev will receive from Frontend
+
+1. ✅ Fully built UI (HTML/CSS/JS from Bolt.new)
+2. ✅ Component library (brand-consistent and reusable)
+3. ✅ API contract documentation (see section 9)
+4. ✅ User flow map (step-by-step for each scenario)
+5. ✅ Brand guidelines (typography, colors, UI tone for emails and UI messages)
+
+---
+
+What Dev is responsible for building
+
+1. 🐦 **Twitter scraping logic** using Apify
+2. 🧠 **Hunt score calculation** (filtering logic + scoring system)
+3. 💳 **Stripe webhook logic** (for post-payment trigger + data binding)
+4. 🧾 **Supabase DB schema** (users, hunts, profiles, saved trophies)
+5. ✉️ **Transactional email system** (confirmation, results, CSV export)
+6. 🔌 **API endpoints** connecting frontend ↔ backend
